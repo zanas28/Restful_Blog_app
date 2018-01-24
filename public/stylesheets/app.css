@@ -5,3 +5,11 @@ i.icon {
 .container.main {
     margin-top: 7.0em;
 }
+
+img.view_image {
+    width: 100%;
+}
+
+/* #view {
+    width: 500px;
+} */

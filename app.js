@@ -52,7 +52,13 @@ app.post('/blogs', (req, res) => {
 
 //SHOW Route
 app.get('/blogs/:id', (req, res) => {
-    res.send('VIEW BLOGS')
+    createBlog.findById(req.params.id, (err, viewBlog) => {
+        if(err) {
+            res.redirect('/blogs');
+        } else {
+            res.render('view', {view: viewBlog});
+        }
+    })
 })
 
 // Listen
