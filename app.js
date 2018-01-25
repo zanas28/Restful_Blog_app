@@ -61,6 +61,17 @@ app.get('/blogs/:id', (req, res) => {
     })
 })
 
+//EDIT 
+app.get('/blogs/:id/edit', (req, res) => {
+    createBlog.findById(req.params.id, (err, editData) => {
+        if(err) {
+            res.send(err);
+        } else {
+            res.render('edit', {edit: editData});
+        }
+    })
+})
+
 // Listen
 app.listen(3500, () => {
     console.log('The server has been running ....');
