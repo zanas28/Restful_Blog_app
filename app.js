@@ -1,6 +1,8 @@
 let express = require('express'),
+    methodOverride = require('method-override'),
     mongoose = require('mongoose'),
     bodyParser = require('body-parser'),
+    expressSainitizer = require('express-sanitizer');
     app = express();
 
 let createBlog = require('./models/blogschema');
@@ -10,6 +12,8 @@ mongoose.connect('mongodb://localhost/restful_blog_app');
 app.set('view engine', 'ejs');
 app.use(express.static('public'));
 app.use(bodyParser.urlencoded({extended: true}));
+app.use(expressSainitizer());
+app.use(methodOverride('_method'));
 
 // createBlog.create({
 //     title: 'Orange',
@@ -41,6 +45,8 @@ app.get('/blogs/new', (req, res) => {
 // Create Blog Routes
 //POST
 app.post('/blogs', (req, res) => {
+    //Sanitize Body if the body html tag
+    req.body.blog.body = req.sanitize(req.body.blog.body);
     createBlog.create(req.body.blog, (err, newBlog) => {
         if(err) {
             res.render('new');
@@ -68,6 +74,29 @@ app.get('/blogs/:id/edit', (req, res) => {
             res.send(err);
         } else {
             res.render('edit', {edit: editData});
+        }
+    })
+})
+
+// UPDATE Route
+app.put('/blogs/:id', (req, res) => {
+    req.body.blog.body = req.sanitize(req.body.blog.body);
+    createBlog.findByIdAndUpdate(req.params.id, req.body.blog, (err, updateBlog) => {
+        if (err) {
+            res.redirect('/blogs');
+        } else {
+            res.redirect(`/blogs/${req.params.id}`);
+        }
+    })
+})
+
+//DELETE Blog
+app.delete('blogs/:id', (req, res) => {
+    createBlog.findByIdAndRemove(req.params.id, (err) => {
+        if(err) {
+            res.send(err);
+        } else {
+            res.redirect('/blogs');
         }
     })
 })

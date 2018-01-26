@@ -6,10 +6,6 @@ i.icon {
     margin-top: 7.0em;
 }
 
-img.view_image {
-    width: 100%;
+#delete {
+    display: inline;
 }
-
-/* #view {
-    width: 500px;
-} */
